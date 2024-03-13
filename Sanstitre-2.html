@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Newsletter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 600px;
+            margin: auto;
+            background-color: black;
+			margin-top: 20px;
+			margin-bottom: 50px;
+        }
+        .flex-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .medium-image {
+            width: 300px;
+            height: auto;
+            margin-right: 10px;
+        }
+        .text-content {
+            flex: 1;
+            padding-left: 10px;
+        }
+        h1, h2 {
+            color: #FFF;
+            margin: 10px 0;
+        }
+		h1 {
+			margin: 0 0 40px 0;
+		}
+        p {
+            color: #CCC;
+            margin: 0;
+        }
+        .rainbow-text {
+            background: linear-gradient(to left, violet, mediumblue, cyan, green, yellow, orange, red);
+            -webkit-background-clip: text;
+            color: transparent;
+            display: inline;
+        }
+        img.large-image {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        hr {
+            border: none;
+            height: 1px;
+            background-image: linear-gradient(to right, #666 5px, transparent 5px);
+            background-size: 10px 1px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><span class="rainbow-text">Latest</span> Innovations & Insights</h1>
+        
+        <h2>Impact of Bitcoin Spot ETFs on the Cryptocurrency Market</h2>
+        <div class="flex-container">
+            <a href="https://www.cointribune.com/47-milliards-amasses-en-2-mois-les-etf-spot-saccaparent-le-marche-du-bitcoin/" target="_blank">
+                <img src="images/impact_of_bitcoin_spot_etfs.png" alt="Impact of Bitcoin Spot ETFs" class="medium-image">
+            </a>
+            <div class="text-content">
+                <p>Since their introduction in January, Bitcoin Spot ETFs have captured a significant portion of the Bitcoin market, amassing 776,464 bitcoins valued at $47.7 billion in just two months. This shift towards institutional investment has bolstered Bitcoin's price and legitimacy, drawing a wider investor base.</p>
+            </div>
+        </div>
+
+        <hr> <!-- Separator line -->
+        
+        <h2>Diverse Investment in Bitcoin</h2>
+        <div class="flex-container">
+            <img src="images/diverse_investment_in_bitcoin.png" alt="Diverse Investment in Bitcoin" class="large-image">
+            <p>This visualization represents the convergence of traditional and cryptocurrency investments, with a focus on the significant interest in Bitcoin from various sectors.</p>
+        </div>
+
+    </div>
+</body>
+</html>
