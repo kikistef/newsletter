@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualisation Sonore 3D avec un Cercle</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/three@0.137.0/build/three.min.js"></script>
+<script>
+let scene, camera, renderer, circle, circle2, circle3, micIconSprite, analyser, audioContext;
+const scaleHistory = [];
+	const delayFrames = 15; // Ajustez ce nombre pour changer le délai
+	
+function initThreeJS() {
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Créer un cercle
+    const geometry = new THREE.CircleGeometry(1, 64); // Remplacé SphereGeometry par CircleGeometry
+    const material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.37 });
+    circle = new THREE.Mesh(geometry, material);
+    scene.add(circle);
+
+	
+	    const material2 = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.1 });
+    circle2 = new THREE.Mesh(geometry, material2);
+    circle2.position.x = 0;
+    scene.add(circle2);
+
+    const material3 = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.1 });
+    circle3 = new THREE.Mesh(geometry, material3);
+    circle3.position.x = 0;
+    scene.add(circle3);
+	
+	    // Chargement et ajout de l'icône de microphone
+    const loader = new THREE.TextureLoader();
+    loader.load('./images/micro.png', function(texture) {
+        const iconMaterial = new THREE.SpriteMaterial({ map: texture,  color: 0xffffff });
+        micIconSprite = new THREE.Sprite(iconMaterial);
+        micIconSprite.scale.set(1, 1, 1); // Ajustez ces valeurs selon la taille souhaitée de l'icône
+		micIconSprite.position.x = 0;
+        scene.add(micIconSprite);
+    });
+	
+    camera.position.z = 5;
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+
+    if (analyser) {
+        const data = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(data);
+
+        let sum = 0;
+        for (let i = 0; i < data.length; i++) {
+            sum += data[i];
+        }
+        let average = sum / data.length;
+        let scale = Math.max(1, average / 8);
+
+        scaleHistory.push(scale);
+        if (scaleHistory.length > delayFrames) {
+            let oldScale = scaleHistory.shift();
+            circle2.scale.set(oldScale, oldScale, oldScale);
+
+            if (scaleHistory.length > delayFrames) {
+                let olderScale = scaleHistory[0];
+                circle3.scale.set(olderScale, olderScale, olderScale);
+            }
+        }
+console.log("Volume moyen:", average);
+        circle.scale.set(scale, scale, scale);
+    }
+        
+   
+
+    renderer.render(scene, camera);
+}
+
+async function initAudio() {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const source = audioContext.createMediaStreamSource(stream);
+        analyser = audioContext.createAnalyser();
+        source.connect(analyser);
+        analyser.fftSize = 2048;
+    } else {
+        console.error("getUserMedia not supported in this browser.");
+    }
+}
+
+async function start() {
+    initThreeJS();
+    await initAudio();
+    animate();
+}
+
+start().catch(console.error);
+</script>
+</body>
+</html>
